@@ -11,11 +11,10 @@ void print_layer(const cell_vertex_layer_2d& layer, std::uint32_t nx = 75, std::
         cluster.to_dense(denseGrid, nx, ny, x0, y0);
         for(auto y = ny ; y != 0U ; --y) {
             for(auto x = 0U ; x < nx ; ++x) {
-                std::cout << (denseGrid[(y-1) * nx + x] ? '+' : ' ');
+                std::cout << (denseGrid[(y-1) * nx + x] ? "██" : "  ");
             }
             std::cout << std::endl;
         }
-        std::cout << i << std::endl;
     }
 }
 
@@ -27,7 +26,7 @@ void print_layer_obstacle(const cell_vertex_layer_2d& layer, std::uint32_t nx = 
         cluster.obstacle_to_dense(denseGrid, nx, ny, x0, y0);
         for(auto y = ny ; y != 0U ; --y) {
             for(auto x = 0U ; x < nx ; ++x) {
-                std::cout << (denseGrid[(y-1) * nx + x] ? '*' : ' ');
+                std::cout << (denseGrid[(y-1) * nx + x] ? "▓▓" : "  ");
             }
             std::cout << std::endl;
         }
@@ -46,16 +45,21 @@ void dump_layer(std::ostream& os, const cell_vertex_layer_2d& layer) {
 }
 
 int main() {
-    auto c = circle2(0.15f, 0.15f, 0.09f, 0.85f, 0.85f, 0.09f);
+    auto c = circle(0.4f, 0.4f, 0.24f);
     cell_vertex_layer_2d layer0 (0.f, 0.f, 1.1f, 1.1f, 0.1f, c);
     print_layer(layer0);
     print_layer_obstacle(layer0);
     auto layer1 = layer0.refine(c);
     print_layer(layer1);
-    // auto layer2 = layer1.refine(c);
-    // print_layer(layer2);
-    // // auto layer3 = layer2.refine(c);
-    // // print_layer(layer3);
+    print_layer_obstacle(layer1);
+    auto layer2 = layer1.refine(c);
+    print_layer(layer2);
+    print_layer_obstacle(layer2);
+    auto layer3 = layer2.refine(c);
+    print_layer(layer3);
+    print_layer_obstacle(layer3);
+    dump_layer(std::cout, layer3);
+
 
     return 0;
 }
